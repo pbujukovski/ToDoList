@@ -4,7 +4,7 @@
   height: 400px;
   width: 100%;
   background: linear-gradient(to right, #8e44ad, #e74c3c);
-  background-image: linear-gradient(to right, #e74c3c7a, rgb(117 19 93 / 73%)), url(../../assets/images/background-img.jpg);
+  background-image: linear-gradient(to right,  rgb(117 19 93 / 73%), #e74c3c7a), url(../../assets/images/background-img.jpg);
    flex-wrap: wrap;
    border-bottom-left-radius: 50px;
    border-bottom-right-radius: 50px;
@@ -14,6 +14,16 @@ mat-form-field.mat-mdc-form-field.search-bar.ng-tns-c2608167813-0.mat-mdc-form-f
   border-radius: 4px;
 }
 
+.mat-mdc-table {
+  border-radius: 22px;
+  /* From https://css.glass */
+background: rgba(255, 255, 255, 0.2);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+}
 .flex-container-table {
   display: flex;
   justify-content: center;
@@ -21,7 +31,7 @@ mat-form-field.mat-mdc-form-field.search-bar.ng-tns-c2608167813-0.mat-mdc-form-f
   width: 100%;
   background: transparent;
   flex-wrap: wrap;
-  margin-top: -55px;
+  margin-top: -130px;
 }
 
 .flex-container > div {
@@ -94,6 +104,11 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-Actions.mat-column-Acti
   justify-content: right !important;
   display: flex !important;
   padding: 13px !important;
+}
+
+.mat-mdc-row{
+
+  max-width: 20vw;
 }
 
 @media only screen and (max-width: 800px) {

@@ -18,7 +18,7 @@ export class TaskManagementService {
     for (let i = 1; i <= 14; i++) {
       const task: ToDoTask = {
         Name: `Task ${i}`,
-        Date: new Date(), // You can set a specific date if needed
+        Date: new Date(new Date().setHours(0, 0, 0, 0)),
         Status: i % 2 === 0 ? TaskStatus.Completed : TaskStatus.Active,
       };
 

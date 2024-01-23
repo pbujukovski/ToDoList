@@ -22,14 +22,19 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TaskStatus } from '../enums/task-status.enum';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+
+import {MatMenuModule} from '@angular/material/menu';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 @Component({
   selector: 'app-to-do-list',
   standalone: true,
@@ -37,7 +42,6 @@ import { TaskStatus } from '../enums/task-status.enum';
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
-    MatGridListModule,
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
@@ -45,16 +49,23 @@ import { TaskStatus } from '../enums/task-status.enum';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatInputModule,
     MatIconModule,
     MatCheckboxModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './to-do-list.component.html',
   styleUrl: './to-do-list.component.css',
   encapsulation: ViewEncapsulation.None,
 })
 export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  statusFilter = new FormControl('');
+  dateFilter = new FormControl('');
   public toDoTaskList: ToDoTask[] = [];
 
   TaskStatus = TaskStatus;
@@ -73,6 +84,29 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
 
   public displayedColumns: string[] = ['Status', 'Name', 'Date', 'Actions'];
+
+
+
+  onButtonClick(event: Event): void {
+    // Prevent the click event from reaching the mat-sort-header
+
+    console.log(event);
+    event.stopPropagation();
+  }
+
+  toggleSelect(select: MatSelect): void {
+    if (!select.panelOpen) {
+      select.open();
+    }
+  }
+
+  onStatusChange(event: MatSelectChange): void {
+    // Check if "Completed" is selected
+    if (event.value === 'Completed') {
+      // Clear the state or perform any other action
+      this.statusFilter.reset(); // Reset the form control
+    }
+  }
 
   constructor(
     taskManagementService: TaskManagementService,
@@ -138,7 +172,19 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyFilter(event: Event) {
+    console.log();
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  filterByCol(filterInput: string){
+    const filterValue = filterInput;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+    filterByDates(selectedDate: any) {
+      console.log(selectedDate);
+      console.log(selectedDate.value.toString());
+      this.filterByCol(selectedDate.value.toString());
+    }
 }

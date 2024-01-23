@@ -25,7 +25,6 @@ interface TaskDialogData {
     MatFormFieldModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatGridListModule,
     CommonModule,
     MatButtonModule,
     MatDialogTitle,
