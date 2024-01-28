@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -12,9 +15,12 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     FormsModule,
-    MatButtonModule,
     MatFormFieldModule,
+    MatButtonModule,
+    MatDialogModule,
     MatInputModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ]
 })
 export class ToDoCommonModule { }

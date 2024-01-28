@@ -14,16 +14,6 @@ mat-form-field.mat-mdc-form-field.search-bar.ng-tns-c2608167813-0.mat-mdc-form-f
   border-radius: 4px;
 }
 
-.mat-mdc-table {
-  border-radius: 22px;
-  /* From https://css.glass */
-background: rgba(255, 255, 255, 0.2);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(5px);
--webkit-backdrop-filter: blur(5px);
-border: 1px solid rgba(255, 255, 255, 0.3);
-}
 .flex-container-table {
   display: flex;
   justify-content: center;
@@ -44,6 +34,7 @@ border: 1px solid rgba(255, 255, 255, 0.3);
   justify-content: center;
   font-size: 30px;
 }
+
 .mat-mdc-form-field-subscript-wrapper {
   box-sizing: border-box;
   width: 100%;
@@ -66,7 +57,7 @@ border: 1px solid rgba(255, 255, 255, 0.3);
 
 img{
   height:44vh;
-  margin-top: 70px;
+  margin-top: 160px;
 }
 
 .search-bar {
@@ -106,11 +97,6 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-Actions.mat-column-Acti
   padding: 13px !important;
 }
 
-.mat-mdc-row{
-
-  max-width: 20vw;
-}
-
 @media only screen and (max-width: 800px) {
   .search-bar {
     width:90vw;
@@ -131,74 +117,9 @@ td.mat-mdc-cell.mdc-data-table__cell.cdk-cell.cdk-column-Actions.mat-column-Acti
 }
 }
 
-
-
-/* .flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: DodgerBlue;
+@media only screen and (max-width: 500px) {
+  .table-content{
+    width: 100vw;
+    overflow: scroll;
+  }
 }
-
-.flex-container > div {
-  background-color: #f1f1f1;
-  width: 100px;
-  margin: 10px;
-  text-align: center;
-  line-height: 75px;
-  font-size: 30px;
-  justify-content: center;
-} */
-
-/* .container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.search-bar {
-  width:900px;
-}
-.gradient-row {
-  height: 400px;
-  width: 100%;
-  background: linear-gradient(to right, #8e44ad, #e74c3c);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.input-container {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 400px;
-  text-align: center;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-.search-bar {
-  width:900px;
-
-}
-
-.full-width-dialog {
-  display: block;
-  width: 480px;
-  height: 600px;
-}
-
-.list-row {
-  justify-content: flex-end;
-  width: 900px;
-  position: absolute;
-} */

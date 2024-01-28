@@ -9,13 +9,9 @@ import {
 import { ToDoTask } from '../models/to-do-task.model';
 import { TaskManagementService } from '../services/task-management.service';
 import { Subscription } from 'rxjs';
-
 import { MatButtonModule } from '@angular/material/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
-
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -30,11 +26,18 @@ import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TaskStatus } from '../enums/task-status.enum';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
-import {MatMenuModule} from '@angular/material/menu';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+import {
+  MatNativeDateModule,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
+import { DialogActions } from '../enums/dialog-actions.enum';
 @Component({
   selector: 'app-to-do-list',
   standalone: true,
@@ -63,41 +66,138 @@ import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material
   encapsulation: ViewEncapsulation.None,
 })
 export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  statusFilter = new FormControl('');
-  dateFilter = new FormControl('');
-  public toDoTaskList: ToDoTask[] = [];
-
+  //Enums
   TaskStatus = TaskStatus;
+  DialogActions = DialogActions;
 
+  // Injected services
   private taskManagementService: TaskManagementService;
 
-  private taskManagementSubscription: Subscription = new Subscription();
-
+  //Dialog
   private dialog: MatDialog;
-  private _liveAnnouncer: LiveAnnouncer;
-
-  dataSource = new MatTableDataSource<ToDoTask>(this.toDoTaskList);
 
   //Decorators
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) public paginator!: MatPaginator;
+  @ViewChild(MatSort) public sort!: MatSort;
+  @ViewChild('picker') public picker!: MatDatepicker<Date | null> | undefined;
 
+  //Subscriptions
+  private taskManagementSubscription: Subscription = new Subscription();
+
+  //Form Controls
+  public statusFilter = new FormControl('');
+
+  //Data
+  public dataSource = new MatTableDataSource<ToDoTask>([]);
+
+  //Data list settings
   public displayedColumns: string[] = ['Status', 'Name', 'Date', 'Actions'];
+  private liveAnnouncer: LiveAnnouncer; //Using LiveAnnouncer to sort columns
 
+  constructor(
+    taskManagementService: TaskManagementService,
+    dialog: MatDialog,
+    liveAnnouncer: LiveAnnouncer
+  ) {
+    this.taskManagementService = taskManagementService;
+    this.dialog = dialog;
+    this.liveAnnouncer = liveAnnouncer;
+  }
 
+  ngOnInit(): void {
+    // Subscribe to the toDoList$ observable from taskManagementService
+    this.taskManagementSubscription =
+      this.taskManagementService.toDoList$.subscribe(
+        (toDoTaskList: ToDoTask[]) => {
+          // Update dataSource with the received toDoTaskList
+          this.dataSource.data = toDoTaskList;
+          // Log the updated data to the console
+          console.log(this.dataSource.data);
+        }
+      );
+
+    // Check if the dataSource is empty
+    if (this.dataSource.data.length === 0) {
+      // If empty, populate the to-do task list using taskManagementService
+      this.taskManagementService.populateToDoTaskList();
+    }
+  }
+
+  ngAfterViewInit() {
+    // Set the paginator of the dataSource to the provided paginator after the view has been initialized
+    this.dataSource.paginator = this.paginator;
+
+    // Set the sort of the dataSource to the provided sort after the view has been initialized
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    // Check if taskManagementSubscription is not null before unsubscribing
+    if (this.taskManagementSubscription != null) {
+      this.taskManagementSubscription.unsubscribe();
+    }
+
+    // Check if dialog is not null before calling its ngOnDestroy method
+    if (this.dialog != null) {
+      this.dialog.ngOnDestroy();
+    }
+  }
+
+  // Function to open a dialog
+  openDialog(
+    dialogWidth: string,
+    dialogHeight: string,
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+    additionalData: DialogActions,
+    toDoTask?: ToDoTask
+  ): void {
+    // Open a dialog using the MatDialog service
+    this.dialog.open(TaskDetailsComponent, {
+      width: dialogWidth,
+      height: dialogHeight,
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: { toDoTask, additionalData },
+    });
+  }
+
+  //Sorting list by column
+  sortByColummn(sortState: Sort) {
+    // Announce sorting information using LiveAnnouncer
+    if (sortState.direction) {
+      this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this.liveAnnouncer.announce('Sorting cleared');
+    }
+  }
+
+  filterBySearchBar(event: Event) {
+    //Set the datepicker input in the filter to null
+    this.picker?.select(null);
+    //Get the value from the event
+    const filterValue = (event.target as HTMLInputElement).value;
+    //Call the filterByCol() method
+    this.filterByCol(filterValue);
+    //this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  //Method to filter tasks by selected date
+  filterByDates(selectedDate: any) {
+    //Convert to string and call the filterByCol() method
+    this.filterByCol(selectedDate.value?.toString());
+  }
+
+  //Method to filter tasks by column
+  filterByCol(filterInput: string) {
+    //Filter the data source with tasks
+    this.dataSource.filter = filterInput?.trim().toLowerCase();
+  }
 
   onButtonClick(event: Event): void {
     // Prevent the click event from reaching the mat-sort-header
-
     console.log(event);
     event.stopPropagation();
-  }
-
-  toggleSelect(select: MatSelect): void {
-    if (!select.panelOpen) {
-      select.open();
-    }
   }
 
   onStatusChange(event: MatSelectChange): void {
@@ -107,84 +207,4 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.statusFilter.reset(); // Reset the form control
     }
   }
-
-  constructor(
-    taskManagementService: TaskManagementService,
-    dialog: MatDialog,
-    _liveAnnouncer: LiveAnnouncer
-  ) {
-    this.taskManagementService = taskManagementService;
-    this.dialog = dialog;
-    this._liveAnnouncer = _liveAnnouncer;
-  }
-
-  ngOnDestroy(): void {
-    if (this.taskManagementSubscription != null) {
-      this.taskManagementSubscription.unsubscribe();
-    }
-
-    this.dialog.ngOnDestroy();
-  }
-
-  ngOnInit(): void {
-    this.taskManagementSubscription =
-      this.taskManagementService.toDoList$.subscribe(
-        (toDoTaskList: ToDoTask[]) => {
-          this.dataSource.data = toDoTaskList;
-          console.log(this.dataSource.data);
-        }
-      );
-
-    if (this.dataSource.data.length == 0) {
-      this.taskManagementService.populateToDoTaskList();
-    }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  openDialog(
-    dialogWidth: string,
-    dialogHeight: string,
-    enterAnimationDuration: string,
-    exitAnimationDuration: string,
-    additionalData: string,
-    toDoTask?: ToDoTask
-  ): void {
-    this.dialog.open(TaskDetailsComponent, {
-      width: dialogWidth,
-      height: dialogHeight,
-      enterAnimationDuration,
-      exitAnimationDuration,
-      // typeAction,
-      data: { toDoTask, additionalData },
-    });
-  }
-
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-
-  applyFilter(event: Event) {
-    console.log();
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  filterByCol(filterInput: string){
-    const filterValue = filterInput;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-    filterByDates(selectedDate: any) {
-      console.log(selectedDate);
-      console.log(selectedDate.value.toString());
-      this.filterByCol(selectedDate.value.toString());
-    }
 }
