@@ -25,7 +25,6 @@
 
       <button mat-raised-button mat-dialog-close type="submit" [disabled]="!toDoTaskForm.valid" class="submit-button">
         Submit
-        <!-- {{ toDoTask.additionalData == 'Add' ? 'Create' : 'Edit' }} -->
       </button>
     </div>
   </form>
@@ -47,7 +46,6 @@
 
         <button mat-raised-button mat-dialog-close type="submit" (click)="onDeleteClicked()" color="warn" class="delete-button">
           Delete
-          <!-- {{ toDoTask.additionalData == 'Add' ? 'Create' : 'Edit' }} -->
         </button>
       </div>
     </form>

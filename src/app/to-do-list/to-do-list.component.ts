@@ -9,61 +9,28 @@ import {
 import { ToDoTask } from '../models/to-do-task.model';
 import { TaskManagementService } from '../services/task-management.service';
 import { Subscription } from 'rxjs';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
-import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-
-import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, DatePipe } from '@angular/common';
-
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSort, Sort } from '@angular/material/sort';
+import { FormControl } from '@angular/forms';
 import { TaskStatus } from '../enums/task-status.enum';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-
-import { MatMenuModule } from '@angular/material/menu';
 import {
-  MatDatepicker,
-  MatDatepickerModule,
+  MatDatepicker
 } from '@angular/material/datepicker';
-import {
-  MatNativeDateModule,
-  provideNativeDateAdapter,
-} from '@angular/material/core';
 import { DialogActions } from '../enums/dialog-actions.enum';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 @Component({
+  standalone: false,
   selector: 'app-to-do-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatPaginatorModule,
-    MatSortModule,
-    CommonModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-  ],
-  providers: [provideNativeDateAdapter()],
   templateUrl: './to-do-list.component.html',
   styleUrl: './to-do-list.component.css',
   encapsulation: ViewEncapsulation.None,
+  providers: [provideNativeDateAdapter()]
 })
 export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
   //Enums
@@ -71,10 +38,10 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
   DialogActions = DialogActions;
 
   // Injected services
-  private taskManagementService: TaskManagementService;
+  public taskManagementService: TaskManagementService;
 
   //Dialog
-  private dialog: MatDialog;
+  public dialog: MatDialog;
 
   //Decorators
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
@@ -82,7 +49,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('picker') public picker!: MatDatepicker<Date | null> | undefined;
 
   //Subscriptions
-  private taskManagementSubscription: Subscription = new Subscription();
+  public taskManagementSubscription: Subscription = new Subscription();
 
   //Form Controls
   public statusFilter = new FormControl('');
@@ -92,7 +59,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   //Data list settings
   public displayedColumns: string[] = ['Status', 'Name', 'Date', 'Actions'];
-  private liveAnnouncer: LiveAnnouncer; //Using LiveAnnouncer to sort columns
+  public liveAnnouncer: LiveAnnouncer; //Using LiveAnnouncer to sort columns
 
   constructor(
     taskManagementService: TaskManagementService,
@@ -111,8 +78,6 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
         (toDoTaskList: ToDoTask[]) => {
           // Update dataSource with the received toDoTaskList
           this.dataSource.data = toDoTaskList;
-          // Log the updated data to the console
-          console.log(this.dataSource.data);
         }
       );
 
@@ -196,15 +161,18 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onButtonClick(event: Event): void {
     // Prevent the click event from reaching the mat-sort-header
-    console.log(event);
     event.stopPropagation();
   }
 
-  onStatusChange(event: MatSelectChange): void {
-    // Check if "Completed" is selected
-    if (event.value === 'Completed') {
-      // Clear the state or perform any other action
-      this.statusFilter.reset(); // Reset the form control
+  onStatusChanged(toDoTask: ToDoTask) {
+    // Check the current status of the ToDoTask and change the value
+    if (toDoTask.Status == TaskStatus.Active) {
+      toDoTask.Status = TaskStatus.Completed;
+    } else if (toDoTask.Status == TaskStatus.Completed) {
+      toDoTask.Status = TaskStatus.Active;
     }
+
+    // Call the taskManagementService to persist the updated ToDoTask
+    this.taskManagementService.editTask(toDoTask);
   }
 }
