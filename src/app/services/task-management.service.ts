@@ -13,7 +13,7 @@ export class TaskManagementService {
   >([]);
 
   //Data
-  private toDoList: ToDoTask[] = [];
+  public toDoList: ToDoTask[] = [];
 
   constructor() {}
 

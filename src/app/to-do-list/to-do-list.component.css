@@ -17,7 +17,7 @@ mat-form-field.mat-mdc-form-field.search-bar.ng-tns-c2608167813-0.mat-mdc-form-f
 .flex-container-table {
   display: flex;
   justify-content: center;
-  /* height: 381px; */
+  padding-bottom: 30px;
   width: 100%;
   background: transparent;
   flex-wrap: wrap;

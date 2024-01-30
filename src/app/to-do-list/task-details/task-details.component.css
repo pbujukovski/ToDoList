@@ -48,11 +48,15 @@
   width: inherit;
 }
 
-hr.style14 {
+hr.style-line {
   margin: 30px 0;
   border: 0;
   height: 1px;
   background-image: -webkit-linear-gradient(left, #e74c3c1c, #8e44ad, #e74c3c1c);
+}
+
+button.submit-button.mdc-button.mdc-button--raised.mat-mdc-raised-button.mat-unthemed.mat-mdc-button-base.mat-mdc-button-disabled {
+  opacity: 0.6;
 }
 
 

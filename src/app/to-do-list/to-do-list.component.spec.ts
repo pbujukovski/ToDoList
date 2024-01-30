@@ -15,7 +15,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
-import { DialogActions } from '../enums/dialog-actions.enum';
+import { DialogAction } from '../enums/dialog-action.enum';
 import {
   MatDatepicker,
   MatDatepickerModule,
@@ -89,19 +89,19 @@ describe('ToDoListComponent', () => {
 
   it('should open a dialog when the create button is clicked', () => {
     spyOn(component.dialog, 'open');
-    component.openDialog('480px', '480px', '600ms', '600ms', DialogActions.Add);
+    component.openDialog('480px', '480px', '600ms', '600ms', DialogAction.Add);
     expect(component.dialog.open).toHaveBeenCalled();
   });
 
   it('should open a dialog when the edit button is clicked', () => {
     spyOn(component.dialog, 'open');
-    component.openDialog('480px', '480px', '600ms', '600ms', DialogActions.Edit);
+    component.openDialog('480px', '480px', '600ms', '600ms', DialogAction.Edit);
     expect(component.dialog.open).toHaveBeenCalled();
   });
 
   it('should open a dialog when the delete button is clicked', () => {
     spyOn(component.dialog, 'open');
-    component.openDialog('480px', '340px', '600ms', '600m', DialogActions.Delete);
+    component.openDialog('480px', '340px', '600ms', '600m', DialogAction.Delete);
     expect(component.dialog.open).toHaveBeenCalled();
   });
 
@@ -207,30 +207,6 @@ describe('ToDoListComponent', () => {
     // Expect the dataSource to be unfiltered (showing all data)
     expect(component.dataSource.filteredData).toEqual(initialData);
   });
-
-  // it('should reset the status filter when "Completed" is selected', () => {
-  //   // Initial setup
-  //   component.statusFilter.setValue('SomeValue'); // Set an initial value for the status filter
-
-  //   // Simulate MatSelectChange event with 'Completed' value
-  //   const event: MatSelectChange = { source: null, value: 'Completed' };
-  //   component.onStatusChange(event);
-
-  //   // Expect the status filter to be reset
-  //   expect(component.statusFilter.value).toEqual('');
-  // });
-
-  // it('should not reset the status filter for other values', () => {
-  //   // Initial setup
-  //   component.statusFilter.setValue('SomeValue'); // Set an initial value for the status filter
-
-  //   // Simulate MatSelectChange event with a value other than 'Completed'
-  //   const event: MatSelectChange = { source: '' value: 'Active' };
-  //   component.onStatusChange(event);
-
-  //   // Expect the status filter to remain unchanged
-  //   expect(component.statusFilter.value).toEqual('Active');
-  // });
 
   afterEach(() => {
     fixture.destroy();

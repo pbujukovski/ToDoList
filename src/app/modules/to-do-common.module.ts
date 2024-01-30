@@ -20,9 +20,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { ToDoListComponent } from '../../to-do-list/to-do-list.component';
-import { TaskDetailsComponent } from '../../to-do-list/task-details/task-details.component';
-import { AppComponent } from '../../app.component';
+import { ToDoListComponent } from '../to-do-list/to-do-list.component';
+import { TaskDetailsComponent } from '../to-do-list/task-details/task-details.component';
+import { AppComponent } from '../app.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @NgModule({

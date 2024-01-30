@@ -21,7 +21,7 @@ import { TaskStatus } from '../enums/task-status.enum';
 import {
   MatDatepicker
 } from '@angular/material/datepicker';
-import { DialogActions } from '../enums/dialog-actions.enum';
+import { DialogAction } from '../enums/dialog-action.enum';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
@@ -33,9 +33,10 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   providers: [provideNativeDateAdapter()]
 })
 export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
+
   //Enums
   TaskStatus = TaskStatus;
-  DialogActions = DialogActions;
+  DialogActions = DialogAction;
 
   // Injected services
   public taskManagementService: TaskManagementService;
@@ -114,7 +115,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogHeight: string,
     enterAnimationDuration: string,
     exitAnimationDuration: string,
-    additionalData: DialogActions,
+    additionalData: DialogAction,
     toDoTask?: ToDoTask
   ): void {
     // Open a dialog using the MatDialog service
